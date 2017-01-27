@@ -24,13 +24,15 @@ class BreadcrumbsBuilder
     private $router;
 
     /**
-     * File used to search for translations
-     * @var String
+     * Current route array segments
+     * @var Array
      */
-    private $lang_file;
-
     private $segments = [];
 
+    /**
+     * Object to get component translations
+     * @var Illuminate\Translation\Translator
+     */
     private $lang;
 
     /**
@@ -40,11 +42,12 @@ class BreadcrumbsBuilder
      */
     public static $defaultView = 'breadcrumbs::default';
 
+    
     public function __construct(View $view, Router $router, Lang $lang, Array $segments)
     {
         $this->router = $router;
         $this->view = $view;
-        $this->segments = array_merge($segments);
+        $this->segments = $segments;
         $this->lang = $lang;
     }
 
@@ -84,7 +87,7 @@ class BreadcrumbsBuilder
 
     /**
      * Return content of the breadcrumb link
-     * @param  String $segment name of route segment
+     * @param  String $route_name name of route segment
      * @return String
      */
     private function getLinkContent($route_name)
@@ -94,7 +97,7 @@ class BreadcrumbsBuilder
         $content = $this->lang->get($field);
 
         return $content === $field
-            ? $segment
+            ? $route_name
             : $content;
 
     }
