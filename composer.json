@@ -1,5 +1,5 @@
 {
-    "name": "jeortiz/breadcrumbs",
+    "name": "johndev/breadcrumbs",
     "description": "Build breadcrumbs automatically in Laravel",
     "authors": [
         {
@@ -14,10 +14,9 @@
     "autoload": {
         "psr-4": {
             "JohnDev\\Breadcrumbs\\": "src/"
-        },
+        }
     },
-    "minimum-stability": "stable",
     "keywords": ["framework", "laravel", "breadcrumbs", "generation", "package"],
     "license": "GNU/GPL",
-    "type": "project",
+    "type": "project"
 }

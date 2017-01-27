@@ -33,7 +33,7 @@ class BreadcrumbsServiceProvider extends ServiceProvider
     protected function registerBreadcrumbsBuilder()
     {
         $this->app->singleton('breadcrumbs', function ($app) {
-            return new Builder($app['view'], $app['router']);
+            return new BreadcrumbsBuilder($app['view'], $app['router'], $app['translator'], $app['request']->segments());
         });
     }
 
@@ -55,17 +55,17 @@ class BreadcrumbsServiceProvider extends ServiceProvider
     public function boot()
     {
         /* Translations */
-        $this->loadTranslationsFrom(__DIR__.'../resources/lang', 'breadcrumbs');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'breadcrumbs');
 
         $this->publishes([
-            __DIR__.'../resources/lang' => resource_path('lang/vendor/breadcrumbs'),
+            __DIR__.'/../resources/lang' => resource_path('lang/vendor/breadcrumbs'),
         ]);
 
         /* Views */
-        $this->loadViewsFrom(__DIR__.'../resources/views', 'breadcrumbs');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'breadcrumbs');
 
         $this->publishes([
-            __DIR__.'../resources/views' => resource_path('views/vendor/breadcrumbs'),
+            __DIR__.'/../resources/views' => resource_path('views/vendor/breadcrumbs'),
         ]);
     }
 }

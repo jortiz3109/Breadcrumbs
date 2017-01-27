@@ -1,5 +1,6 @@
 <?php
 return[
+    'home' => 'Inicio',
     'admin' => [
         'index' => 'Administración',
         'users' => [

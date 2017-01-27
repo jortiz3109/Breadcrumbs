@@ -5,15 +5,10 @@ namespace JohnDev\Breadcrumbs;
 use Illuminate\Routing\Router;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Factory as View;
-use Illuminate\Support\Traits\Macroable;
 use Illuminate\Translation\Translator as Lang;
 
 class BreadcrumbsBuilder
 {
-
-    use Macroable {
-        Macroable::__call as macroCall;
-    }
 
     /**
      * The View factory instance.
@@ -34,6 +29,10 @@ class BreadcrumbsBuilder
      */
     private $lang_file;
 
+    private $segments = [];
+
+    private $lang;
+
     /**
      * The default breadcrumbs view.
      *
@@ -41,36 +40,43 @@ class BreadcrumbsBuilder
      */
     public static $defaultView = 'breadcrumbs::default';
 
-    public function __construct(View $view, Router $router)
+    public function __construct(View $view, Router $router, Lang $lang, Array $segments)
     {
         $this->router = $router;
         $this->view = $view;
-    }
-
-    /* GETTERS */
-
-    /**
-     * Get translation file to search for translations
-     * @return String
-     */
-    private function getTranslationFile()
-    {
-        return isset($this->lang_file)
-            ? $this->lang_file
-            : 'breadcrumbs';
+        $this->segments = array_merge($segments);
+        $this->lang = $lang;
     }
 
     /**
-     * Return route name for the provided segment
-     * @param  String $segment segment to inspect
+     * Return route name for the provided path
+     * @param  Array $path path to inspect
      * @return String|NULL
      */
-    private function getRouteName($segment)
+    private function getRouteName(Array $path)
     {
         $routes = $this->getRoutes();
+        $path = implode('/', $path);
         foreach ($routes as $route) {
-            if ($segment === $route->uri()) {
+            if ($path === $route->uri()) {
                 return $route->getName();
+            }
+        }
+        return NULL;
+    }
+
+    /**
+     * Return route uri for the provided path
+     * @param  Array $path path to inspect
+     * @return String|NULL
+     */
+    private function getRouteUri(Array $path)
+    {
+        $routes = $this->getRoutes();
+        $path = implode('/', $path);
+        foreach ($routes as $route) {
+            if ($path === $route->uri()) {
+                return $route->uri();
             }
         }
         return NULL;
@@ -81,9 +87,9 @@ class BreadcrumbsBuilder
      * @param  String $segment name of route segment
      * @return String
      */
-    private function getLinkContent($segment)
+    private function getLinkContent($route_name)
     {
-        $field = $this->getTranslationFile().'.'.$segment;
+        $field = 'breadcrumbs::links.'.$route_name;
 
         $content = $this->lang->get($field);
 
@@ -115,11 +121,11 @@ class BreadcrumbsBuilder
 
         foreach ($this->segments as $segment) {
             $route[] = $segment;
-            $route_uri = $this->getRouteUri(implode('/', $route));
-            if (!empty($route_uri)) {
+            $route_name = $this->getRouteName($route);
+            if (!empty($route_name)) {
                 $links[] = (object) [
-                    'route' => $route_uri,
-                    'body'  => $this->getTitle($segment)
+                    'uri' => $this->getRouteUri($route),
+                    'body'  => $this->getLinkContent($route_name)
                 ];
             }
         }
