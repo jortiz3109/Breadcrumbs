@@ -1,0 +1,23 @@
+{
+    "name": "jeortiz/breadcrumbs",
+    "description": "Build breadcrumbs automatically in Laravel",
+    "authors": [
+        {
+            "name": "John Edisson Ortiz",
+            "email": "j.ortiz3109@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "laravel/framework": "5.3.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "JohnDev\\Breadcrumbs\\": "src/"
+        },
+    },
+    "minimum-stability": "stable",
+    "keywords": ["framework", "laravel", "breadcrumbs", "generation", "package"],
+    "license": "GNU/GPL",
+    "type": "project",
+}
