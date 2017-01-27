@@ -17,6 +17,6 @@
         }
     },
     "keywords": ["framework", "laravel", "breadcrumbs", "generation", "package"],
-    "license": "GNU/GPL",
+    "license": "MIT",
     "type": "project"
 }
