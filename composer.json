@@ -1,6 +1,6 @@
 {
     "name": "johndev/breadcrumbs",
-    "description": "Build breadcrumbs automatically in Laravel",
+    "description": "Build breadcrumbs automatically in Laravel PLEASE DONT USE IN PRODUCTION, THIS PACKAGES IS ALREADY IN DEV STATUS",
     "authors": [
         {
             "name": "John Edisson Ortiz",
