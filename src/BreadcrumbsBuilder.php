@@ -2,6 +2,7 @@
 
 namespace JohnDev\Breadcrumbs;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Factory as View;
@@ -42,12 +43,18 @@ class BreadcrumbsBuilder
      */
     public static $defaultView = 'breadcrumbs::default';
 
-    
-    public function __construct(View $view, Router $router, Lang $lang, Array $segments)
+    /**
+     * Class constructor
+     * @param View    $view View Factory
+     * @param Router  $router Router
+     * @param Lang    $lang Translator
+     * @param Request $request Http Request
+     */
+    public function __construct(View $view, Router $router, Lang $lang, Request $request)
     {
         $this->router = $router;
         $this->view = $view;
-        $this->segments = $segments;
+        $this->segments = explode('/', $request->route()->uri());
         $this->lang = $lang;
     }
 
@@ -119,6 +126,7 @@ class BreadcrumbsBuilder
      */
     public function render($view = null)
     {
+
         $links = array();
         $route = array();
 
