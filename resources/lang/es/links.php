@@ -6,6 +6,8 @@ return[
         'users' => [
             'index' => 'Usuarios',
             'create' => 'Nuevo usuario',
+            'show' => 'Detalle usuario',
+            'edit' => 'Editar usuario'
         ],
     ],
 ];
