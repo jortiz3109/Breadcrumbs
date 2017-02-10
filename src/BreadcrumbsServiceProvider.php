@@ -33,7 +33,7 @@ class BreadcrumbsServiceProvider extends ServiceProvider
     protected function registerBreadcrumbsBuilder()
     {
         $this->app->singleton('breadcrumbs', function ($app) {
-            return new BreadcrumbsBuilder($app['view'], $app['router'], $app['translator'], $app['request']->segments());
+            return new BreadcrumbsBuilder($app['view'], $app['router'], $app['translator'], $app['request']);
         });
     }
 
