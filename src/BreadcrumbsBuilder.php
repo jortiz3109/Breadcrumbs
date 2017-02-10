@@ -69,10 +69,11 @@ class BreadcrumbsBuilder
         $path = implode('/', $path);
         foreach ($routes as $route) {
             if ($path === $route->uri()) {
-                return $route->getName();
+                return !empty($route->getName())
+                        ? $route->getName()
+                        : $this->routeNameDoted($path);
             }
         }
-        return NULL;
     }
 
     /**
@@ -133,15 +134,30 @@ class BreadcrumbsBuilder
         foreach ($this->segments as $segment) {
             $route[] = $segment;
             $route_name = $this->getRouteName($route);
-            if (!empty($route_name)) {
-                $links[] = (object) [
-                    'uri' => $this->getRouteUri($route),
-                    'body'  => $this->getLinkContent($route_name)
-                ];
-            }
+
+            $links[] = (object) [
+                'uri' => $this->getRouteUri($route),
+                'body'  => $this->getLinkContent($route_name)
+            ];
         }
 
         return new HtmlString($this->view->make($view ?: static::$defaultView, compact('links'))->render());
     }
 
+    /**
+     * return the route name in doted format
+     * @param  String $path Route path to translate
+     * @return String translated path route to dots
+     */
+    private function routeNameDoted($path)
+    {
+
+        $path = str_replace('/', '.', $path);
+
+        // Replace route params in route uri
+        $path = preg_replace("/(\{[a-zA-Z0-9]*\}.?)/", '', $path);
+        $path = preg_replace("/(\{[a-zA-Z0-9]*\})/", '', $path);
+
+        return $path;
+    }
 }
