@@ -3,7 +3,6 @@
 namespace JohnDev\Breadcrumbs;
 
 use Illuminate\Http\Request;
-use Illuminate\Routing\Router;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Factory as View;
 use Illuminate\Translation\Translator as Lang;
@@ -19,10 +18,10 @@ class BreadcrumbsBuilder
     private $view;
 
     /**
-     * The Router instance
-     * @var Illuminate\Routing\Router
+     * The application registered routes
+     * @var Array
      */
-    private $router;
+    private $routes;
 
     /**
      * Current route array segments
@@ -46,13 +45,13 @@ class BreadcrumbsBuilder
     /**
      * Class constructor
      * @param View    $view View Factory
-     * @param Router  $router Router
+     * @param Array   $routes Aplication registered GET routes
      * @param Lang    $lang Translator
      * @param Request $request Http Request
      */
-    public function __construct(View $view, Router $router, Lang $lang, Request $request)
+    public function __construct(View $view, $routes, Lang $lang, Request $request)
     {
-        $this->router = $router;
+        $this->routes = $routes;
         $this->view = $view;
         $this->segments = explode('/', $request->route()->uri());
         $this->lang = $lang;
@@ -65,13 +64,12 @@ class BreadcrumbsBuilder
      */
     private function getRouteName(Array $path)
     {
-        $routes = $this->getRoutes();
         $path = implode('/', $path);
-        foreach ($routes as $route) {
+        foreach ($this->routes as $route) {
             if ($path === $route->uri()) {
                 return !empty($route->getName())
-                        ? $route->getName()
-                        : $this->routeNameDoted($path);
+                    ? $route->getName()
+                    : $this->routeNameDoted($path);
             }
         }
     }
@@ -83,9 +81,8 @@ class BreadcrumbsBuilder
      */
     private function getRouteUri(Array $path)
     {
-        $routes = $this->getRoutes();
         $path = implode('/', $path);
-        foreach ($routes as $route) {
+        foreach ($this->routes as $route) {
             if ($path === $route->uri()) {
                 return $route->uri();
             }
@@ -111,15 +108,6 @@ class BreadcrumbsBuilder
     }
 
     /**
-     * Get array of routes
-     * @return Array
-     */
-    private function getRoutes()
-    {
-        return $this->router->getRoutes();
-    }
-
-    /**
      * Render breadcrumb
      * @return Illuminate\Support\HtmlString
      * The default template could be published (into resources/views/breadcrumbs/)
@@ -135,10 +123,12 @@ class BreadcrumbsBuilder
             $route[] = $segment;
             $route_name = $this->getRouteName($route);
 
-            $links[] = (object) [
-                'uri' => $this->getRouteUri($route),
-                'body'  => $this->getLinkContent($route_name)
-            ];
+            if (!empty($route_name)) {
+                $links[] = (object) [
+                    'uri' => $this->getRouteUri($route),
+                    'body'  => $this->getLinkContent($route_name)
+                ];
+            }
         }
 
         return new HtmlString($this->view->make($view ?: static::$defaultView, compact('links'))->render());
