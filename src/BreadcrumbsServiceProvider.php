@@ -33,7 +33,7 @@ class BreadcrumbsServiceProvider extends ServiceProvider
     protected function registerBreadcrumbsBuilder()
     {
         $this->app->singleton('breadcrumbs', function ($app) {
-            return new BreadcrumbsBuilder($app['view'], $app['router'], $app['translator'], $app['request']);
+            return new BreadcrumbsBuilder($app['view'], $this->getRoutes(), $app['translator'], $app['request']);
         });
     }
 
@@ -67,5 +67,16 @@ class BreadcrumbsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../resources/views' => resource_path('views/vendor/breadcrumbs'),
         ]);
+    }
+
+    /**
+     * Return only registered GET routes
+     * @return Array array of GET routes
+     */
+    private function getRoutes()
+    {
+        $routes = $this->app['router']->getRoutes()->getRoutesByMethod();
+
+        return $routes['GET'];
     }
 }
