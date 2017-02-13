@@ -3,8 +3,10 @@
 namespace JohnDev\Breadcrumbs;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Factory as View;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Translation\Translator as Lang;
 
 class BreadcrumbsBuilder
@@ -28,6 +30,13 @@ class BreadcrumbsBuilder
      * @var Array
      */
     private $segments = [];
+
+
+    /**
+     * Current request parameters
+     * @var mixed
+     */
+    private $params;
 
     /**
      * Object to get component translations
@@ -54,6 +63,7 @@ class BreadcrumbsBuilder
         $this->routes = $routes;
         $this->view = $view;
         $this->segments = explode('/', $request->route()->uri());
+        $this->params = $request->route()->parameters();
         $this->lang = $lang;
     }
 
@@ -69,7 +79,7 @@ class BreadcrumbsBuilder
             if ($path === $route->uri()) {
                 return !empty($route->getName())
                     ? $route->getName()
-                    : $this->routeNameDoted($path);
+                    : $this->routeDotedName($path);
             }
         }
     }
@@ -82,9 +92,17 @@ class BreadcrumbsBuilder
     private function getRouteUri(Array $path)
     {
         $path = implode('/', $path);
-        foreach ($this->routes as $route) {
-            if ($path === $route->uri()) {
-                return $route->uri();
+        foreach ($this->routes as $key => $route) {
+            if ( $path === $route->uri() ) {
+                $uri = $route->uri();
+
+                if (!empty($route->parameterNames())) {
+                    $uri = $this->bindRouteParams($route);
+                }
+
+                //Delete the route thats matched from routes array
+                unset($this->routes[$key]);
+                return $uri;
             }
         }
         return NULL;
@@ -126,7 +144,7 @@ class BreadcrumbsBuilder
             if (!empty($route_name)) {
                 $links[] = (object) [
                     'uri' => $this->getRouteUri($route),
-                    'body'  => $this->getLinkContent($route_name)
+                    'body'  => $this->getLinkContent($route_name),
                 ];
             }
         }
@@ -139,7 +157,7 @@ class BreadcrumbsBuilder
      * @param  String $path Route path to translate
      * @return String translated path route to dots
      */
-    private function routeNameDoted($path)
+    private function routeDotedName($path)
     {
 
         $path = str_replace('/', '.', $path);
@@ -149,5 +167,46 @@ class BreadcrumbsBuilder
         $path = preg_replace("/(\{[a-zA-Z0-9]*\})/", '', $path);
 
         return $path;
+    }
+
+    /**
+     * Return uri with the route parameters bound
+     * @param  Illuminate\Routing\Route $route The route to check
+     * @return String        The route's uri
+     */
+    private function bindRouteParams(Route $route)
+    {
+
+        $route_params = $route->parameterNames();
+
+        $uri = $route->uri();
+
+        foreach ($route_params as $param) {
+            $uri = str_replace(['{'.$param.'}', '{'.$param.'?}'], $this->getParamValue($param), $uri);
+        }
+
+        return $uri;
+    }
+
+    /**
+     * Return the value of the param supplied
+     * @param  String $param Param name to check
+     * @return mixed|null        The param's value
+     */
+    private function getParamValue($param)
+    {
+        if (array_key_exists($param, $this->params)) {
+
+            $value = $this->params[$param];
+
+            if ($value instanceof Model) {
+                return $value->getRouteKey();
+            }
+
+            return $value;
+        }
+
+        return null;
+
     }
 }
