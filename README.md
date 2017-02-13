@@ -1,5 +1,11 @@
 # JohnDev Breadcrumbs package
 
+[![Latest Stable Version](https://poser.pugx.org/johndev/breadcrumbs/v/stable)](https://packagist.org/packages/johndev/breadcrumbs)
+[![Total Downloads](https://poser.pugx.org/johndev/breadcrumbs/downloads)](https://packagist.org/packages/johndev/breadcrumbs)
+[![Latest Unstable Version](https://poser.pugx.org/johndev/breadcrumbs/v/unstable)](https://packagist.org/packages/johndev/breadcrumbs)
+[![License](https://poser.pugx.org/johndev/breadcrumbs/license)](https://packagist.org/packages/johndev/breadcrumbs)
+[![composer.lock](https://poser.pugx.org/johndev/breadcrumbs/composerlock)](https://packagist.org/packages/johndev/breadcrumbs)
+
 This package helps you to generate the breadcrumb component for your app in Laravel
 
 ## Compatibilty
