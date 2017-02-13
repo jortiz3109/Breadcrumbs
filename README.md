@@ -13,7 +13,7 @@ To install this component using **composer**, simply run this command on the bas
 ```bash
 composer require johndev/breadcrumbs
 ```
-or add `"johndev/breadcrumbs": "^0.1.0"` to your `composer.json` file and then run the command:
+or add `"johndev/breadcrumbs": "^0.2.0"` to your `composer.json` file and then run the command:
 
 ```bash
 composer update
