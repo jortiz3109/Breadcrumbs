@@ -7,7 +7,7 @@ return[
             'index' => 'Users',
             'create' => 'New user',
             'show' => 'User Details|:name',
-            'edit' => 'Edit user'
+            'edit' => 'Edit'
         ],
     ],
 ];

@@ -4,10 +4,10 @@ return[
     'admin' => [
         'index' => 'Administración',
         'users' => [
-            'index' => 'Usuarios',
+            'index'  => 'Usuarios',
             'create' => 'Nuevo usuario',
-            'show' => 'Detalle usuario|:name',
-            'edit' => 'Editar usuario'
+            'show'   => 'Detalle usuario|:name',
+            'edit'   => 'Editar'
         ],
     ],
 ];
