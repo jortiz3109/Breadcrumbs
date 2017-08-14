@@ -9,7 +9,7 @@
 This package helps you to generate the breadcrumb component for your app in Laravel
 
 ## Compatibilty
-This package is currently only compatible with [Laravel](http://www.laravel.com) 5.3.*
+This package is currently compatible with [Laravel](http://www.laravel.com) 5.3+
 
 ## Instalation
 ### Using [Composer](http://getcomposer.org/):
