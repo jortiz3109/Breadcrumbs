@@ -1,6 +1,6 @@
 {
     "name": "johndev/breadcrumbs",
-    "description": "Build breadcrumbs automatically in Laravel 5.3",
+    "description": "Build breadcrumbs automatically in Laravel",
     "authors": [
         {
             "name": "John Edisson Ortiz",
